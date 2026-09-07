@@ -40,5 +40,16 @@ def main():
         save_tasks(tasks)
         print(f'Task added: "{description}" (ID: {new_id})')
 
+
+    elif command == "list":
+        tasks = load_tasks()
+        if not tasks:
+            print("No tasks found.")
+            return
+        for t in tasks:
+            status = "[x]" if t["completed"] else "[ ]"
+            print(f"{status} {t['id']}: {t['description']}")
+            
+
 if __name__ == "__main__":
     main()
