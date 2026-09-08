@@ -49,6 +49,36 @@ def main():
         for t in tasks:
             status = "[x]" if t["completed"] else "[ ]"
             print(f"{status} {t['id']}: {t['description']}")
+
+
+    elif command == "complete":
+        if len(sys.argv) < 3:
+            print("Usage python task_manager complete <id>")
+            return
+        try:
+            task_id = int(sys.argv[2])
+        except ValueError:
+            print("Error: ID must be a number.")
+            return
+
+
+        tasks = load_tasks()
+        found = False
+        for t in tasks:
+            if t["id"] == task_id:
+                t["completed"] = True
+                found = True
+                break
+
+
+        if not found:
+            print(f"Error: No task with ID {task_id}")
+            return
+
+        save_tasks(tasks)
+        print(f"Task {task_id} marked as complete.")
+        
+                
             
 
 if __name__ == "__main__":
