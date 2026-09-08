@@ -78,8 +78,28 @@ def main():
         save_tasks(tasks)
         print(f"Task {task_id} marked as complete.")
         
-                
-            
+    elif command == "delete":
+        if len(sys.argv) < 3:
+            print("Usage: python task_manager.py delete <id>")
+            return
+        try:
+            task_id = int(sys.argv[2])
+        except ValueError:
+            print("Error: ID must be a number.")
+            return
+
+
+        tasks = load_tasks()
+
+        original_len = len(tasks)
+        tasks = [t for t in tasks if t["id"] != task_id]
+
+        if len(tasks) == original_len:
+            print(f"Error: No task with  ID {task_id}.")
+            return
+
+        save_tasks(tasks)
+        print(f"Task {task_id} deleted.")    
 
 if __name__ == "__main__":
     main()
