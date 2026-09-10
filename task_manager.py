@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import argparse
 
 
 TASKS_FILE = "tasks.json"
@@ -20,28 +21,31 @@ def save_tasks(tasks):
 
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python task_manager.py <command>")
-        return
+    parser = argparse.ArgumentParser(description="Task manager CLI")
+    subparsers = parser.add_subparsers(dest="command", required=True)
 
-    command = sys.argv[1]
+    parser_add = subparsers.add_parser("add", help="Add a new task")
+    parser_add.add_argument("description", nargs="+", help="Task description")
 
-    if command == "add":
-        if len(sys.argv) < 3:
-            print("Usage: python task_manager.py add <description>")
-            return
-        description = " ".join(sys.argv[2:])
+    parser_list = subparsers.add_parser("list", help="List all tasks")
 
+    parser_complete = subparsers.add_parser("complete", help="Mark a task as completed")
+    parser_complete.add_argument("id", type=int, help="Task ID")
+
+    parser_delete = subparsers.add_parser("delete", help="Delete a task")
+    parser_delete.add_argument("id", type=int, help="Task ID")
+
+    args = parser.parse_args()
+
+    if args.command == "add":
+        description = " ".join(args.description)
         tasks = load_tasks()
-
         new_id = max([t["id"] for t in tasks], default=0) + 1
         tasks.append({"id": new_id, "description": description, "completed": False})
-
         save_tasks(tasks)
         print(f'Task added: "{description}" (ID: {new_id})')
 
-
-    elif command == "list":
+    elif args.command == "list":
         tasks = load_tasks()
         if not tasks:
             print("No tasks found.")
@@ -50,18 +54,8 @@ def main():
             status = "[x]" if t["completed"] else "[ ]"
             print(f"{status} {t['id']}: {t['description']}")
 
-
-    elif command == "complete":
-        if len(sys.argv) < 3:
-            print("Usage python task_manager complete <id>")
-            return
-        try:
-            task_id = int(sys.argv[2])
-        except ValueError:
-            print("Error: ID must be a number.")
-            return
-
-
+    elif args.command == "complete":
+        task_id = args.id
         tasks = load_tasks()
         found = False
         for t in tasks:
@@ -69,37 +63,22 @@ def main():
                 t["completed"] = True
                 found = True
                 break
-
-
         if not found:
-            print(f"Error: No task with ID {task_id}")
+            print(f"Error: No task with ID {task_id}.")
             return
-
         save_tasks(tasks)
-        print(f"Task {task_id} marked as complete.")
-        
-    elif command == "delete":
-        if len(sys.argv) < 3:
-            print("Usage: python task_manager.py delete <id>")
-            return
-        try:
-            task_id = int(sys.argv[2])
-        except ValueError:
-            print("Error: ID must be a number.")
-            return
+        print(f"Task {task_id} marked as completed.")
 
-
+    elif args.command == "delete":
+        task_id = args.id
         tasks = load_tasks()
-
         original_len = len(tasks)
         tasks = [t for t in tasks if t["id"] != task_id]
-
         if len(tasks) == original_len:
-            print(f"Error: No task with  ID {task_id}.")
+            print(f"Error: No task with ID {task_id}.")
             return
-
         save_tasks(tasks)
-        print(f"Task {task_id} deleted.")    
+        print(f"Task {task_id} deleted.")
 
 if __name__ == "__main__":
     main()
