@@ -19,6 +19,14 @@ def save_tasks(tasks, path=TASKS_FILE):
     with open(TASKS_FILE, "w") as f:
         json.dump(tasks, f, indent=4)
 
+def add_task(description, path=TASKS_FILE):
+    tasks = load_tasks(path)
+    new_id = max([t["id"] for t in tasks], default=0) + 1
+    tasks.append({"id": new_id, "description": description, "completed": False})
+    save_tasks(tasks, path)
+    return new_id
+
+
 
 def main():
     parser = argparse.ArgumentParser(description="Task manager CLI")
@@ -39,10 +47,7 @@ def main():
 
     if args.command == "add":
         description = " ".join(args.description)
-        tasks = load_tasks()
-        new_id = max([t["id"] for t in tasks], default=0) + 1
-        tasks.append({"id": new_id, "description": description, "completed": False})
-        save_tasks(tasks)
+        new_id = add_task(description)
         print(f'Task added: "{description}" (ID: {new_id})')
 
     elif args.command == "list":
