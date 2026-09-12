@@ -31,6 +31,20 @@ def add_task(description, path=TASKS_FILE):
 def list_tasks(path=TASKS_FILE):
     return load_tasks(path)
 
+
+def complete_task(task_id, path=TASKS_FILE):
+    tasks = load_tasks(path)
+    found = False
+    for t in tasks:
+        if t["id"] == task_id:
+            t["completed"] = True
+            found = True
+            break
+    if not found:
+        return False
+    save_tasks(tasks, path)
+    return True
+
 def main():
     parser = argparse.ArgumentParser(description="Task manager CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -64,18 +78,10 @@ def main():
 
     elif args.command == "complete":
         task_id = args.id
-        tasks = load_tasks()
-        found = False
-        for t in tasks:
-            if t["id"] == task_id:
-                t["completed"] = True
-                found = True
-                break
-        if not found:
-            print(f"Error: No task with ID {task_id}.")
-            return
-        save_tasks(tasks)
-        print(f"Task {task_id} marked as completed.")
+        if complete_task(task_id):
+            print(f"Task {task_id} marked as completed")
+        else:
+            print(f"Error: No task with ID {task_id}")
 
     elif args.command == "delete":
         task_id = args.id
