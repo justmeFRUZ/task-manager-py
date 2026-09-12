@@ -6,14 +6,20 @@ import argparse
 
 TASKS_FILE = "tasks.json"
 
+class CorruptedTasksFileError(Exception):
+    """Raised when the tasks file is corrupted and cannot be loaded."""
+
+
 def load_tasks(path=TASKS_FILE):
     if os.path.exists(path):
         with open(path, "r") as f:
-            return json.load(f)
-
-    else:
-        return []
-
+            try:
+                return json.load(f)
+            except json.JSONDecodeError as e:
+                raise CorruptedTasksFileError(f"Tasks file is corrupted and cannot be loaded: {path}") from e
+    return []
+        
+    
 
 def save_tasks(tasks, path=TASKS_FILE):
     with open(path, "w") as f:

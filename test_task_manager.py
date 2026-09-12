@@ -1,4 +1,6 @@
 import task_manager
+import pytest
+
 
 def test_add_task_return_new_id(tmp_path):
     path = tmp_path / "tasks.json"
@@ -25,8 +27,9 @@ def test_complete_task_success(tmp_path):
 def test_load_tasks_corrupted_json(tmp_path):
     path = tmp_path / "tasks.json"
     path.write_text("this is not valid json")
-    tasks =task_manager.list_tasks(path=path)
-    assert tasks == []
+    with pytest.raises(task_manager.CorruptedTasksFileError):
+        task_manager.list_tasks(path=path)
+
 
 
 def test_complete_task_missing_id(tmp_path):
