@@ -22,6 +22,13 @@ def test_complete_task_success(tmp_path):
     assert tasks[0]["completed"] is True
 
 
+def test_load_tasks_corrupted_json(tmp_path):
+    path = tmp_path / "tasks.json"
+    path.write_text("this is not valid json")
+    tasks =task_manager.list_tasks(path=path)
+    assert tasks == []
+
+
 def test_complete_task_missing_id(tmp_path):
     path = tmp_path / "tasks.json"
     task_manager.add_task("buy milk", path=path)
