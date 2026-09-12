@@ -6,7 +6,7 @@ import argparse
 
 TASKS_FILE = "tasks.json"
 
-def load_tasks():
+def load_tasks(path=TASKS_FILE):
     if os.path.exists(TASKS_FILE):
         with open(TASKS_FILE, "r") as f:
             return json.load(f)
@@ -15,7 +15,7 @@ def load_tasks():
         return []
 
 
-def save_tasks(tasks):
+def save_tasks(tasks, path=TASKS_FILE):
     with open(TASKS_FILE, "w") as f:
         json.dump(tasks, f, indent=4)
 
