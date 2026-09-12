@@ -28,6 +28,9 @@ def add_task(description, path=TASKS_FILE):
 
 
 
+def list_tasks(path=TASKS_FILE):
+    return load_tasks(path)
+
 def main():
     parser = argparse.ArgumentParser(description="Task manager CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -51,7 +54,7 @@ def main():
         print(f'Task added: "{description}" (ID: {new_id})')
 
     elif args.command == "list":
-        tasks = load_tasks()
+        tasks = list_tasks()
         if not tasks:
             print("No tasks found.")
             return
