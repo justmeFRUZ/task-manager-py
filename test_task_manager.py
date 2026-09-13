@@ -16,7 +16,7 @@ def test_list_tasks_with_task(tmp_path):
 
 
 def test_complete_task_success(tmp_path):
-    path = tmp_path / "tasjs.json"
+    path = tmp_path / "tasks.json"
     new_id = task_manager.add_task("buy milk", path=path)
     result = task_manager.complete_task(new_id, path=path)
     assert result is True 
@@ -45,3 +45,9 @@ def test_list_tasks_empty(tmp_path):
     path = tmp_path / "tasks.json"
     tasks = task_manager.list_tasks(path=path)
     assert tasks == []
+
+
+def test_add_task_empty_string_name(tmp_path):
+    path = tmp_path / "tasks.json"
+    result = task_manager.add_task("", path=path)
+    assert result is None

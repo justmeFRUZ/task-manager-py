@@ -26,6 +26,8 @@ def save_tasks(tasks, path=TASKS_FILE):
         json.dump(tasks, f, indent=4)
 
 def add_task(description, path=TASKS_FILE):
+    if not description.strip():
+        return None
     tasks = load_tasks(path)
     new_id = max([t["id"] for t in tasks], default=0) + 1
     tasks.append({"id": new_id, "description": description, "completed": False})
