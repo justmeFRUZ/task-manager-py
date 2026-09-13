@@ -51,3 +51,12 @@ def test_add_task_empty_string_name(tmp_path):
     path = tmp_path / "tasks.json"
     result = task_manager.add_task("", path=path)
     assert result is None
+
+def test_add_task_new_id_after_delete(tmp_path):
+    path = tmp_path / "tasks.json"
+    task_manager.add_task("buy milk", path=path)
+    id2 = task_manager.add_task("walk dog", path=path)
+    id3 = task_manager.add_task("read book", path=path)
+    task_manager.delete_task(id2, path=path)
+    id4 = task_manager.add_task("new task", path=path)
+    assert id4 == 4
