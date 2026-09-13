@@ -60,3 +60,13 @@ def test_add_task_new_id_after_delete(tmp_path):
     task_manager.delete_task(id2, path=path)
     id4 = task_manager.add_task("new task", path=path)
     assert id4 == 4
+
+
+def test_delete_task_nonexistent_task(tmp_path):
+    path = tmp_path / "tasks.json"
+    task_manager.add_task("buy milk", path=path)
+    result = task_manager.delete_task(999, path=path)
+    assert result is False
+    tasks =  task_manager.list_tasks(path=path)
+    assert len(tasks) == 1
+
