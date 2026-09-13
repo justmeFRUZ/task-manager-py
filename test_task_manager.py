@@ -75,3 +75,15 @@ def test_add_task_empty_file(tmp_path):
     path.write_text("")
     new_id = task_manager.add_task("buy milk", path=path)
     assert new_id == 1
+
+
+def test_complete_task_already_completed(tmp_path): 
+    path = tmp_path / "tasks.json"
+    new_id = task_manager.add_task("buy milk", path=path)
+    first = task_manager.complete_task(new_id, path=path)
+    second = task_manager.complete_task(new_id, path=path)
+    assert first is True
+    assert second is True
+    tasks = task_manager.list_tasks(path=path)
+    assert tasks[0]["completed"] is True
+
