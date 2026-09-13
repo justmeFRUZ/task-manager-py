@@ -13,8 +13,11 @@ class CorruptedTasksFileError(Exception):
 def load_tasks(path=TASKS_FILE):
     if os.path.exists(path):
         with open(path, "r") as f:
+            content = f.read()
+            if not content.strip():
+                return []
             try:
-                return json.load(f)
+                return json.loads(content)
             except json.JSONDecodeError as e:
                 raise CorruptedTasksFileError(f"Tasks file is corrupted and cannot be loaded: {path}") from e
     return []

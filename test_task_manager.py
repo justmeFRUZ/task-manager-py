@@ -70,3 +70,8 @@ def test_delete_task_nonexistent_task(tmp_path):
     tasks =  task_manager.list_tasks(path=path)
     assert len(tasks) == 1
 
+def test_add_task_empty_file(tmp_path):
+    path = tmp_path / "tasks.json"
+    path.write_text("")
+    new_id = task_manager.add_task("buy milk", path=path)
+    assert new_id == 1
