@@ -85,7 +85,10 @@ def main():
     if args.command == "add":
         description = " ".join(args.description)
         new_id = add_task(description)
-        print(f'Task added: "{description}" (ID: {new_id})')
+        if new_id is None:
+            print("Error: task description cannot be empty")
+        else:
+            print(f'Task added: "{description}" (ID: {new_id})')
 
     elif args.command == "list":
         tasks = list_tasks()
