@@ -2,6 +2,10 @@
 
 A simple command-line task manager written in Python. Tasks are stored in `tasks.json` (auto-created on first use).
 
+## Demo
+
+![CLI demo](demo.png)
+
 ## Usage
 
     python task_manager.py add <description>
