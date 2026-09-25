@@ -27,4 +27,4 @@ A simple command-line task manager written in Python. Tasks are stored in `tasks
 
 - Task IDs are auto-assigned (incrementing).
 - `[ ]` means pending, `[x]` means completed.
-- Data lives in `tasks.json` next to the script.
+- Data lives in `tasks.json` in the current working directory.
